@@ -64,3 +64,10 @@ var keywords = map[string]TokenType{
 	"while":  WHILE,
 	"return": RETURN,
 }
+
+func LookupIdent(ident string) TokenType {
+	if tok, ok := keywords[ident]; ok {
+		return tok
+	}
+	return IDENT
+}
