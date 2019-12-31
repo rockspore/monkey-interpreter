@@ -17,7 +17,7 @@ func New(input string) *Lexer {
 	return l
 }
 
-// NextToken : tbd
+// NextToken : primary method to get next token
 func (l *Lexer) NextToken() token.Token {
 	var tok token.Token
 
