@@ -8,9 +8,10 @@ import (
 type ObjectType string
 
 const (
-	IntegerOBJ = "INTEGER"
-	BooleanOBJ = "BOOLEAN"
-	NullOBJ    = "NULL"
+	IntegerOBJ     = "INTEGER"
+	BooleanOBJ     = "BOOLEAN"
+	NullOBJ        = "NULL"
+	ReturnValueOBJ = "RETURN_VALUE"
 )
 
 // Object : object interface
@@ -60,4 +61,19 @@ func (n *Null) Inspect() string {
 // Type : return null type
 func (n *Null) Type() ObjectType {
 	return NullOBJ
+}
+
+// ReturnValue : return value object
+type ReturnValue struct {
+	Value Object
+}
+
+// Inspect : return the returned object value
+func (rv *ReturnValue) Inspect() string {
+	return rv.Value.Inspect()
+}
+
+// Type : return return-value type
+func (rv *ReturnValue) Type() ObjectType {
+	return ReturnValueOBJ
 }

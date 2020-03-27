@@ -269,6 +269,32 @@ func (ie *IfExpression) String() string {
 	return out.String()
 }
 
+// WhileExpression : implements the Expression interface
+type WhileExpression struct {
+	Token       token.Token
+	Condition   Expression
+	Consequence *BlockStatement
+}
+
+func (we *WhileExpression) expressionNode() {}
+
+// TokenLiteral : returns the ifexpression's token literal
+func (we *WhileExpression) TokenLiteral() string {
+	return we.Token.Literal
+}
+
+// String : returns the string form of the ifexpression
+func (we *WhileExpression) String() string {
+	var out bytes.Buffer
+
+	out.WriteString("if")
+	out.WriteString(we.Condition.String())
+	out.WriteString(" ")
+	out.WriteString(we.Consequence.String())
+
+	return out.String()
+}
+
 // BlockStatement : implements the Statement interface
 type BlockStatement struct {
 	Token      token.Token // the { token
