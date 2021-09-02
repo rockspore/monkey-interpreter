@@ -5,14 +5,17 @@ import (
 	"fmt"
 	"io"
 
+	"github.com/rockspore/monkey-interpreter/evaluator"
 	"github.com/rockspore/monkey-interpreter/lexer"
-	"github.com/rockspore/monkey-interpreter/token"
+	"github.com/rockspore/monkey-interpreter/object"
+	"github.com/rockspore/monkey-interpreter/parser"
 )
 
-const PROMPT = ">> "
-
+// Start : entry point of the REPL
 func Start(in io.Reader, out io.Writer) {
+	const PROMPT = ">> "
 	scanner := bufio.NewScanner(in)
+	env := object.NewEnvironment()
 
 	for {
 		fmt.Printf(PROMPT)
@@ -23,9 +26,25 @@ func Start(in io.Reader, out io.Writer) {
 
 		line := scanner.Text()
 		l := lexer.New(line)
+		p := parser.New(l)
 
-		for tok := l.NextToken(); tok.Type != token.EOF; tok = l.NextToken() {
-			fmt.Printf("%+v\n", tok)
+		program := p.ParseProgram()
+		if len(p.Errors()) != 0 {
+			printParseErrors(out, p.Errors())
+			continue
 		}
+
+		evaluated := evaluator.Eval(program, env)
+		if evaluated != nil {
+			io.WriteString(out, evaluated.Inspect())
+			io.WriteString(out, "\n")
+		}
+
+	}
+}
+
+func printParseErrors(out io.Writer, errors []string) {
+	for _, msg := range errors {
+		io.WriteString(out, "\t"+msg+"\n")
 	}
 }
